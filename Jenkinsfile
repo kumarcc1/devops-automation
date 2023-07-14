@@ -22,16 +22,15 @@ pipeline {
                 script{
                    withCredentials([usernamePassword(credentialsId: 'dockerhublogin', passwordVariable: 'dockerhubpwd', usernameVariable: 'kumarcc1')]) {
                        sh 'docker login -u ${kumarcc1} -p ${dockerhubpwd}'
-
-}
-                   sh 'docker push kumarcc1/devops-integration'
+                       sh 'docker push kumarcc1/devops-integration'
+                   }
                 }
             }
         }
         stage('Deploy to k8s'){
             steps{
                 script{
-                    kubernetesDeploy (configs: 'deploymentservice.yaml',kubeconfigId: 'kubernetes')
+                    kubernetesDeploy (configs: 'deploymentservice.yaml',kubeconfigId: 'Kubernate-login')
                 }
             }
         }
