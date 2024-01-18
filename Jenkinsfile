@@ -13,7 +13,8 @@ pipeline {
         stage('Build docker image'){
             steps{
                 script{
-                    sh 'docker build -t kumarcc1/devops-integration .'
+                    sh "docker build -t kumarcc1/devops-integration:${BUILD_NUMBER} ."
+
                 }
             }
         }
