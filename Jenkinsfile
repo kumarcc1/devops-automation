@@ -3,6 +3,15 @@ pipeline {
     tools{
         maven 'maven_3_5_0'
     }
+    options{
+
+        buildDiscarder(logRotator(numToKeepStr: '10', daysToKeepStr: '30'))
+        disableConcurrentBuilds()
+		  timeout(time:20,unit:'SECONDS')
+        timestamps()
+        
+    }
+        
     stages{
         stage('Build Maven'){
             steps{
