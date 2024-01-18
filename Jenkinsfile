@@ -32,7 +32,7 @@ pipeline {
                 script{
                    withCredentials([usernamePassword(credentialsId: 'dockerhublogin', passwordVariable: 'dockerhub', usernameVariable: 'kumarcc1')]) {
                        sh 'docker login -u ${kumarcc1} -p ${dockerhub}'
-                       sh 'docker push kumarcc1/devops-integration'
+                       sh 'docker push kumarcc1/devops-integration:${BUILD_NUMBER}'
                    }
                 }
             }
