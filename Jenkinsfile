@@ -5,9 +5,9 @@ pipeline {
     }
     options{
 
-        buildDiscarder(logRotator(numToKeepStr: '2', daysToKeepStr: '1'))
-        disableConcurrentBuilds()
-	timeout(time: 1, unit: 'HOURS')
+        buildDiscarder(logRotator(numToKeepStr: '2', daysToKeepStr: '0'))
+ //        disableConcurrentBuilds()
+	// timeout(time: 1, unit: 'HOURS')
         timestamps()
         
     }
@@ -22,7 +22,7 @@ pipeline {
         stage('Build docker image'){
             steps{
                 script{
-                    sh "docker build -t kumarcc1/devops-integration:${BUILD_NUMBER} ."
+                    sh "docker build -t kumarcc1/devops-integration ."
 
                 }
             }
@@ -32,7 +32,7 @@ pipeline {
                 script{
                    withCredentials([usernamePassword(credentialsId: 'dockerhublogin', passwordVariable: 'dockerhub', usernameVariable: 'kumarcc1')]) {
                        sh 'docker login -u ${kumarcc1} -p ${dockerhub}'
-                       sh 'docker push kumarcc1/devops-integration:${BUILD_NUMBER}'
+                       sh 'docker push kumarcc1/devops-integration'
                    }
                 }
             }
