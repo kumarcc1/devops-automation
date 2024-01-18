@@ -1,12 +1,22 @@
-apiVersion: apps/v1
-kind: Deployment # Kubernetes resource kind we are creating
+# Namespace for Test Environment
+apiVersion: v1
+kind: Namespace
 metadata:
+  name: test
+
+---
+
+# Deployment for Test Environment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: test
   name: spring-boot-k8s-deployment
 spec:
   selector:
     matchLabels:
       app: spring-boot-k8s
-  replicas: 1 # Number of replicas that will be created for this deployment
+  replicas: 1
   template:
     metadata:
       labels:
@@ -14,23 +24,124 @@ spec:
     spec:
       containers:
         - name: spring-boot-k8s
-          image: kumarcc1/devops-integration # Image that will be used to containers in the cluster
-          imagePullPolicy: IfNotPresent
+          image: kumarcc1/devops-integration:test
+          imagePullPolicy: Always
           ports:
-            - containerPort: 8080 # The port that the container is running on in the cluster
-
+            - containerPort: 8080
 
 ---
 
-apiVersion: v1 # Kubernetes API version
-kind: Service # Kubernetes resource kind we are creating
-metadata: # Metadata of the resource kind we are creating
+# Service for Test Environment
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: test
   name: springboot-k8ssvc
 spec:
   selector:
     app: spring-boot-k8s
   ports:
     - protocol: "TCP"
-      port: 8080 # The port that the service is running on in the cluster
-      targetPort: 8080 # The port exposed by the service
-  type: NodePort # type of the service.
+      port: 8080
+      targetPort: 8080
+  type: NodePort
+
+---
+
+# Namespace for Stage Environment
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: stage
+
+---
+
+# Deployment for Stage Environment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: stage
+  name: spring-boot-k8s-deployment
+spec:
+  selector:
+    matchLabels:
+      app: spring-boot-k8s
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: spring-boot-k8s
+    spec:
+      containers:
+        - name: spring-boot-k8s
+          image: kumarcc1/devops-integration:stage
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+
+---
+
+# Service for Stage Environment
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: stage
+  name: springboot-k8ssvc
+spec:
+  selector:
+    app: spring-boot-k8s
+  ports:
+    - protocol: "TCP"
+      port: 8080
+      targetPort: 8080
+  type: NodePort
+
+---
+
+# Namespace for Production Environment
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: prod
+
+---
+
+# Deployment for Production Environment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: prod
+  name: spring-boot-k8s-deployment
+spec:
+  selector:
+    matchLabels:
+      app: spring-boot-k8s
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: spring-boot-k8s
+    spec:
+      containers:
+        - name: spring-boot-k8s
+          image: kumarcc1/devops-integration:prod
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+
+---
+
+# Service for Production Environment
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: prod
+  name: springboot-k8ssvc
+spec:
+  selector:
+    app: spring-boot-k8s
+  ports:
+    - protocol: "TCP"
+      port: 8080
+      targetPort: 8080
+  type: NodePort
